@@ -19,7 +19,7 @@
 import logging
 
 from sqlalchemy import or_
-
+# dgbgfb
 from airflow import models
 from airflow.exceptions import DagNotFound
 from airflow.models import DagModel, TaskFail
@@ -57,8 +57,10 @@ def delete_dag(dag_id: str, keep_records_in_log: bool = True, session=None) -> i
         if hasattr(model, "dag_id"):
             if keep_records_in_log and model.__name__ == 'Log':
                 continue
-            cond = or_(model.dag_id == dag_id, model.dag_id.like(dag_id + ".%"))
-            count += session.query(model).filter(cond).delete(synchronize_session='fetch')
+            cond = or_(model.dag_id == dag_id,
+                       model.dag_id.like(dag_id + ".%"))
+            count += session.query(model).filter(
+                cond).delete(synchronize_session='fetch')
     if dag.is_subdag:
         parent_dag_id, task_id = dag_id.rsplit(".", 1)
         for model in TaskFail, models.TaskInstance:
